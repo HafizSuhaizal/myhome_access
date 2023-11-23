@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../Controller/visitor_vehicle.dart';
+import '../Controller/visitor_vehicle.dart'; // Adjust this import path as necessary
 
 class VisitorRegistrationView extends StatefulWidget {
   @override
@@ -38,14 +38,14 @@ class _VisitorRegistrationViewState extends State<VisitorRegistrationView> {
             ListTile(
               title: Text("Start Time: ${_selectedStartTime.toIso8601String()}"),
               onTap: () async {
-                final date = await showDatePicker(
+                final DateTime? date = await showDatePicker(
                   context: context,
                   initialDate: _selectedStartTime,
                   firstDate: DateTime.now().subtract(Duration(days: 365)),
                   lastDate: DateTime.now().add(Duration(days: 365)),
                 );
                 if (date != null) {
-                  final time = await showTimePicker(
+                  final TimeOfDay? time = await showTimePicker(
                     context: context,
                     initialTime: TimeOfDay.fromDateTime(_selectedStartTime),
                   );
@@ -66,14 +66,14 @@ class _VisitorRegistrationViewState extends State<VisitorRegistrationView> {
             ListTile(
               title: Text("End Time: ${_selectedEndTime.toIso8601String()}"),
               onTap: () async {
-                final date = await showDatePicker(
+                final DateTime? date = await showDatePicker(
                   context: context,
                   initialDate: _selectedEndTime,
                   firstDate: DateTime.now().subtract(Duration(days: 365)),
                   lastDate: DateTime.now().add(Duration(days: 365)),
                 );
                 if (date != null) {
-                  final time = await showTimePicker(
+                  final TimeOfDay? time = await showTimePicker(
                     context: context,
                     initialTime: TimeOfDay.fromDateTime(_selectedEndTime),
                   );
@@ -107,29 +107,37 @@ class _VisitorRegistrationViewState extends State<VisitorRegistrationView> {
               }).toList(),
             ),
             ElevatedButton(
-              onPressed: () {
-                String result = _controller.registerVehicle(
-                  _plateNumberController.text,
-                  _selectedStartTime,
-                  _selectedEndTime,
-                  _visitorNameController.text,
-                  _selectedAccessType,
-                  _vehicleTypeController.text,
-                );
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Text(result),
-                    );
-                  },
-                );
+              onPressed: () async {
+                try {
+                  String result = await _controller.registerVehicle(
+                    _plateNumberController.text,
+                    _selectedStartTime,
+                    _selectedEndTime,
+                    _visitorNameController.text,
+                    _selectedAccessType,
+                    _vehicleTypeController.text,
+                  );
+                  _showDialog(context, result);
+                } catch (e) {
+                  _showDialog(context, 'Error: ${e.toString()}');
+                }
               },
               child: Text('Register Vehicle'),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(message),
+        );
+      },
     );
   }
 }
