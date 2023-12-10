@@ -63,10 +63,20 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
       appBar: AppBar(
         title: Text('Emergency Alert'),
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: 20),
+            Text(
+              'Report an Emergency',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
             TextField(
               controller: _typeController,
               decoration: InputDecoration(
@@ -74,64 +84,51 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                _type = value;
+                setState(() {
+                  _type = value;
+                });
               },
             ),
             SizedBox(height: 10),
             TextField(
               controller: _messageController,
+              maxLines: 3,
               decoration: InputDecoration(
                 labelText: 'Message',
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                _message = value;
-              },
-            ),
-            SizedBox(height: 10),
-            if (initializeControllerFuture != null)
-              FutureBuilder<void>(
-                future: initializeControllerFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return CameraPreview(cameraController!);
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
-            SizedBox(height: 20),
-            FutureBuilder(
-              future: _imageUrl == null ? Future.value(false) : File(_imageUrl!).exists(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data == true) {
-                    return Image.file(File(_imageUrl!));
-                  } else {
-                    return Text("No image selected.");
-                  }
-                } else {
-                  return CircularProgressIndicator();
-                }
+                setState(() {
+                  _message = value;
+                });
               },
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: takePicture,
-              child: Text('Take Picture'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                var alert = EmergencyAlert(
-                  type: _type,
-                  message: _message,
-                  imageUrl: _imageUrl,
-                  timestamp: DateTime.now(),
-                );
-                _controller.sendEmergencyAlert(alert);
-              },
-              child: Text('Send Alert'),
+            _imageUrl != null
+                ? Image.file(File(_imageUrl!))
+                : Container(),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: takePicture,
+                  child: Text('Take Picture'),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    var alert = EmergencyAlert(
+                      type: _type,
+                      message: _message,
+                      imageUrl: _imageUrl,
+                      timestamp: DateTime.now(),
+                    );
+                    _controller.sendEmergencyAlert(alert);
+                  },
+                  child: Text('Send Alert'),
+                ),
+              ],
             ),
           ],
         ),

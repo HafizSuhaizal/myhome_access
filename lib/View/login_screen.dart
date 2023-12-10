@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myhome_access/View/emergency_alert.dart';
 import 'package:myhome_access/View/vehicle_view.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text.trim(),
         );
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => AddVehicleView(),
+          builder: (context) => EmergencyScreen(),
         ));
       } on FirebaseAuthException catch (e) {
         setState(() {

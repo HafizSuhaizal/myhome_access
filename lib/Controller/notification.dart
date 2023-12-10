@@ -5,7 +5,8 @@ class NotificationController {
 
   Future<void> initNotifications() async {
     // Request permission for notifications
-    await _messaging.requestPermission();
+    NotificationSettings settings = await _messaging.requestPermission();
+    print('User granted permission: ${settings.authorizationStatus}');
 
     // Subscribe to the 'emergency' topic
     await _messaging.subscribeToTopic('emergency');
@@ -14,7 +15,15 @@ class NotificationController {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // Handle notification message
       print('Received a notification: ${message.notification?.title}');
-      // You can update the UI or perform other actions based on the notification
+      // Update UI or perform other actions based on the notification
     });
+
+    // Handle background notification
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message: ${message.messageId}');
+  // Handle background notification
 }
