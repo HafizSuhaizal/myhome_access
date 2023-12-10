@@ -9,7 +9,7 @@ import 'package:myhome_access/View/login_screen.dart';
 import 'package:myhome_access/signup_screen.dart';
 import 'package:myhome_access/vehicle.dart';
 import 'View/patrol_schedule.dart';
-
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'View/user.dart';
 import 'View/vehicle_view.dart';
 import 'firebase_options.dart';
@@ -18,6 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   runApp(MyApp());
 }
 
