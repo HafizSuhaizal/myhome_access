@@ -39,4 +39,15 @@ class VisitorVehicle {
       status: firestoreData['status'] as String? ?? 'Access Granted',
     );
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'plateNumber': plateNumber,
+      'accessStartTime': accessStartTime,
+      'accessEndTime': accessEndTime,
+      'visitorName': visitorName,
+      'typeOfAccess': typeOfAccess,
+      'vehicleType': vehicleType,
+      'status': status,
+    };
+  }
 }

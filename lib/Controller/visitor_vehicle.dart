@@ -46,4 +46,19 @@ class VisitorVehicleController {
       }
     }
   }
+  Future<void> applyFine(String plateNumber) async {
+    try {
+      await _visitorsCollection.doc(plateNumber).update({'fined': true});
+    } catch (e) {
+      print("Error applying fine: $e");
+    }
+  }
+  Future<VisitorVehicle?> getVehicleDetails(String plateNumber) async {
+    var document = await _visitorsCollection.doc(plateNumber).get();
+    if (document.exists) {
+      return VisitorVehicle.fromFirestore(document.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
+  }
 }
