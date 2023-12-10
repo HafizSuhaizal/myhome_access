@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../Controller/notification.dart';
 import '../Model/notification.dart';
 
