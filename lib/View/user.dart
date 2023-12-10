@@ -35,6 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           role: _selectedRole,
           address: _addressController.text,
           phoneNo: _phoneController.text,
+
         );
 
         await _userController.createUser(newUser);

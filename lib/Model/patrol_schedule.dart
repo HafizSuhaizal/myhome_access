@@ -23,3 +23,38 @@ class PatrolSchedule{
   }
 
 }*/
+
+
+// model.dart
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+/*class PatrolSchedule {
+  final String guard1;
+  final String guard2;
+  final String guard3;
+
+  PatrolSchedule({required this.guard1, required this.guard2, required this.guard3});
+
+ *//* factory PatrolSchedule.fromJson(Map<String, dynamic> json) {
+    return PatrolSchedule(
+      guard1: json['guard1'],
+      guard2: json['guard2'],
+      guard3: json['guard3'],
+    );
+  }*//*
+}*/
+
+class PatrolSchedule {
+  final String morning;
+  final String night;
+
+  PatrolSchedule({required this.morning, required this.night});
+
+  factory PatrolSchedule.fromMap(Map<String, dynamic> data) {
+    return PatrolSchedule(
+      morning: data['morning'] ?? '',
+      night: data['night'] ?? '',
+    );
+  }
+}

@@ -120,3 +120,33 @@ class _PatrolScheduleState extends State<PatrolSchedule> {
       );
     }
 }*/
+
+
+
+
+// view.dart
+/*import 'package:flutter/material.dart';
+import '../Controller/patrol_schedule.dart';
+
+class PatrolView extends StatelessWidget {
+  final PatrolController controller = PatrolController();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Firebase Cloud Function Demo'),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              await controller.generateRandomPatrolSchedule();
+            },
+            child: Text('Generate Random Patrol Schedule'),
+          ),
+        ),
+      ),
+    );
+  }
+}*/
