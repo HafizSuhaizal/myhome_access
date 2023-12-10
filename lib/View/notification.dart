@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../Controller/notification.dart';
+import '../Model/notification.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -31,10 +33,49 @@ class _NotificationPageState extends State<NotificationPage> {
               return ListTile(
                 title: Text(notification.title),
                 subtitle: Text(notification.body),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NotificationDetailPage(alert: notification),
+                    ),
+                  );
+                },
               );
             },
           );
         },
+      ),
+    );
+  }
+}
+
+class NotificationDetailPage extends StatelessWidget {
+  final NotificationModel alert;
+
+  NotificationDetailPage({Key? key, required this.alert}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(alert.title),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (alert.imageUrl != null)
+              Image.network(alert.imageUrl!),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                alert.body,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            // Additional details can be added here
+          ],
+        ),
       ),
     );
   }

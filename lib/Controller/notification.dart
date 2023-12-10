@@ -2,7 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import '../Model/notification.dart';
 
-
 class NotificationManager with ChangeNotifier {
   List<NotificationModel> notifications = [];
 
