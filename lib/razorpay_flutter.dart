@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:eventify/eventify.dart';
-import 'package:myhome_access/upi_turbo.dart';
+import 'package:history_logs/upi_turbo.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io' show Platform;
 
