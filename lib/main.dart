@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:history_logs/View/emergency_alert.dart';
 import 'View/fine_visitor_vehicle.dart';
 import 'View/user.dart';
 import 'View/vehicle_view.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:PatrolScreen(),
+      home:EmergencyScreen(),
     );
   }
 }
