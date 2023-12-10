@@ -45,16 +45,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
   }*//*
 }*/
 
-class PatrolSchedule {
-  final String morning;
-  final String night;
+class PatrolScheduleModel {
+  late String day;
+  late Map<String, String> shifts;
 
-  PatrolSchedule({required this.morning, required this.night});
+  PatrolScheduleModel({required this.day, required this.shifts});
 
-  factory PatrolSchedule.fromMap(Map<String, dynamic> data) {
-    return PatrolSchedule(
-      morning: data['morning'] ?? '',
-      night: data['night'] ?? '',
-    );
+  PatrolScheduleModel.fromJson(Map<String, dynamic> json) {
+    day = json['day'];
+    shifts = Map<String, String>.from(json['shifts']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['day'] = this.day;
+    data['shifts'] = this.shifts;
+    return data;
   }
 }
+

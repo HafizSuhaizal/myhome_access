@@ -69,3 +69,48 @@ class PatrolController {
 }
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Model/patrol_schedule.dart';
+
+class PatrolScheduleController {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> updatePatrolSchedule(String userEmail, List<PatrolScheduleModel> schedule) async {
+    await _firestore.collection("users").doc(userEmail).update({'patrolSchedule': _convertScheduleToJson(schedule)});
+  }
+
+  Future<List<PatrolScheduleModel>> getAllPatrolSchedules() async {
+    try {
+      // Fetch all users from Firestore
+      final QuerySnapshot<Map<String, dynamic>> usersSnapshot = await _firestore.collection("users").get();
+
+      // Extract patrol schedules from each user
+      List<PatrolScheduleModel> allPatrolSchedules = [];
+      usersSnapshot.docs.forEach((userDoc) {
+        if (userDoc.exists) {
+          final data = userDoc.data();
+          if (data != null && data.containsKey('patrolSchedule')) {
+            // Convert Firestore data to PatrolScheduleModel
+            final List<dynamic> scheduleData = data['patrolSchedule'];
+            List<PatrolScheduleModel> userPatrolSchedules = scheduleData.map((entry) => PatrolScheduleModel.fromJson(entry)).toList();
+
+            // Add to the list of all patrol schedules
+            allPatrolSchedules.addAll(userPatrolSchedules);
+          }
+        }
+      });
+
+      return allPatrolSchedules;
+    } catch (error) {
+      // Handle error
+      print('Error fetching patrol schedules: $error');
+      throw error;
+    }
+  }
+
+  List<Map<String, dynamic>> _convertScheduleToJson(List<PatrolScheduleModel> schedule) {
+    return schedule.map((entry) => entry.toJson()).toList();
+  }
+}
+
+

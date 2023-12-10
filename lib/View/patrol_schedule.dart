@@ -150,3 +150,54 @@ class PatrolView extends StatelessWidget {
     );
   }
 }*/
+
+
+import 'package:flutter/material.dart';
+
+import '../Controller/patrol_schedule.dart';
+import '../Model/patrol_schedule.dart';
+
+
+class PatrolScheduleView extends StatefulWidget {
+  const PatrolScheduleView({Key? key}) : super(key: key);
+
+  @override
+  State<PatrolScheduleView> createState() => _PatrolScheduleViewState();
+}
+
+class _PatrolScheduleViewState extends State<PatrolScheduleView> {
+  final PatrolScheduleController _scheduleController = PatrolScheduleController();
+
+  @override
+  Widget build(BuildContext context) {
+    // Your UI for displaying and managing the patrol schedule goes here
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Patrol Schedule'),
+      ),
+      body: FutureBuilder(
+        future: _scheduleController.getAllPatrolSchedules(),
+        builder: (context, AsyncSnapshot<List<PatrolScheduleModel>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Loading indicator
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // Display your list of patrol schedules using snapshot.data
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final schedule = snapshot.data![index];
+                // Build your UI for each patrol schedule item
+                return ListTile(
+                  title: Text(schedule.day),
+                  // Customize the display based on your PatrolScheduleModel structure
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
