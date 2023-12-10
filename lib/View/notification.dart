@@ -7,11 +7,13 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  final NotificationController _controller = NotificationController();
+  final NotificationManager _manager = NotificationManager();
+  late final NotificationController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = NotificationController(_manager);
     _controller.initNotifications();
   }
 
@@ -19,8 +21,20 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Notifications')),
-      body: Center(
-        child: Text('Notifications will appear here.'),
+      body: AnimatedBuilder(
+        animation: _manager,
+        builder: (context, _) {
+          return ListView.builder(
+            itemCount: _manager.notifications.length,
+            itemBuilder: (context, index) {
+              var notification = _manager.notifications[index];
+              return ListTile(
+                title: Text(notification.title),
+                subtitle: Text(notification.body),
+              );
+            },
+          );
+        },
       ),
     );
   }
