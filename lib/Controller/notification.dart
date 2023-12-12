@@ -15,6 +15,7 @@ class NotificationController {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final NotificationManager manager;
 
+
   NotificationController(this.manager);
 
   Future<void> initNotifications() async {
