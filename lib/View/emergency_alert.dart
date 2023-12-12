@@ -1,9 +1,14 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import '../Controller/emergency_alert.dart';
 
 class EmergencyScreen extends StatefulWidget {
+  final String userEmail;
+
+  EmergencyScreen({Key? key, required this.userEmail}) : super(key: key);
+
   @override
   _EmergencyScreenState createState() => _EmergencyScreenState();
 }
@@ -13,11 +18,11 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   CameraController? cameraController;
   Future<void>? initializeControllerFuture;
 
-  String _type = '';
+  String _type = 'Fire';
   String _message = '';
   String? _imageUrl;
-  final _typeController = TextEditingController();
-  final _messageController = TextEditingController();
+
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   void initState() {
@@ -51,9 +56,8 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   @override
   void dispose() {
-    _typeController.dispose();
-    _messageController.dispose();
     cameraController?.dispose();
+    _messageController.dispose();
     super.dispose();
   }
 
@@ -72,25 +76,25 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
               SizedBox(height: 20),
               Text(
                 'Report an Emergency',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
-              TextField(
-                controller: _typeController,
+              DropdownButtonFormField<String>(
+                value: _type,
+                onChanged: (newValue) => setState(() => _type = newValue!),
+                items: <String>['Fire', 'Natural Disaster', 'Others']
+                    .map<DropdownMenuItem<String>>(
+                        (value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    ))
+                    .toList(),
                 decoration: InputDecoration(
                   labelText: 'Type of Emergency',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    _type = value;
-                  });
-                },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               TextField(
                 controller: _messageController,
                 maxLines: 3,
@@ -98,38 +102,27 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                   labelText: 'Message',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    _message = value;
-                  });
-                },
+                onChanged: (value) => _message = value,
               ),
               SizedBox(height: 20),
               _imageUrl != null
                   ? Image.file(File(_imageUrl!))
-                  : Container(),
+                  : ElevatedButton(
+                onPressed: takePicture,
+                child: Text('Take Picture'),
+              ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: takePicture,
-                    child: Text('Take Picture'),
-                  ),
-                  SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      var alert = EmergencyAlert(
-                        type: _type,
-                        message: _message,
-                        imageUrl: _imageUrl,
-                        timestamp: DateTime.now(),
-                      );
-                      _controller.sendEmergencyAlert(alert);
-                    },
-                    child: Text('Send Alert'),
-                  ),
-                ],
+              ElevatedButton(
+                onPressed: () {
+                  var alert = EmergencyAlert(
+                    type: _type,
+                    message: _message,
+                    imageUrl: _imageUrl,
+                    timestamp: DateTime.now(),
+                  );
+                  _controller.sendEmergencyAlert(alert);
+                },
+                child: Text('Send Alert'),
               ),
             ],
           ),

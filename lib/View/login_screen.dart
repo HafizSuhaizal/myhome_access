@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text.trim(),
         );
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => EmergencyScreen(),
+          builder: (context) => EmergencyScreen(userEmail: '',),
         ));
       } on FirebaseAuthException catch (e) {
         setState(() {

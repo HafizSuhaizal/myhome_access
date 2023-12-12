@@ -14,6 +14,7 @@ class EmergencyController {
   }
 }
 
+
 class EmergencyAlert {
   String? id; // Made nullable
   String type;
