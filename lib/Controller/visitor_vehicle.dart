@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../Model/visitor_vehicle.dart'; // Adjust this import path as necessary
 
 class VisitorVehicleController {
   final CollectionReference _visitorsCollection = FirebaseFirestore.instance.collection('visitor');
 
-  Future<String> registerVehicle(String plateNumber, DateTime startTime, DateTime endTime, String visitorName, String typeOfAccess, String vehicleType) async {
+  Future<String> registerVehicle(String plateNumber, DateTime startTime, DateTime endTime, String visitorName, String typeOfAccess, String vehicleType,String userId) async {
     var existingVehicle = await _visitorsCollection.doc(plateNumber).get();
     if (existingVehicle.exists) {
       return "Plate Number already registered";
@@ -17,6 +18,7 @@ class VisitorVehicleController {
       visitorName: visitorName,
       typeOfAccess: typeOfAccess,
       vehicleType: vehicleType,
+      userId:userId,
     );
 
     await _visitorsCollection.doc(plateNumber).set({
@@ -27,6 +29,7 @@ class VisitorVehicleController {
       'typeOfAccess': vehicle.typeOfAccess,
       'vehicleType': vehicle.vehicleType,
       'status': vehicle.status,
+      'userId':vehicle.userId,
     });
 
     return "Vehicle successfully registered";
@@ -56,9 +59,21 @@ class VisitorVehicleController {
   Future<VisitorVehicle?> getVehicleDetails(String plateNumber) async {
     var document = await _visitorsCollection.doc(plateNumber).get();
     if (document.exists) {
-      return VisitorVehicle.fromFirestore(document.data() as Map<String, dynamic>);
+      return VisitorVehicle.fromFirestore(
+          document.data() as Map<String, dynamic>);
     } else {
       return null;
     }
+  }
+  Future<List<VisitorVehicle>> getRegisteredVehiclesByUser() async {
+    var userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      return [];
+    }
+
+    var querySnapshot = await _visitorsCollection.where('userId', isEqualTo: userId).get();
+    return querySnapshot.docs
+        .map((doc) => VisitorVehicle.fromFirestore(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 }

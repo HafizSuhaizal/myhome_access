@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Controller/visitor_vehicle.dart'; // Adjust this import path as necessary
+import 'package:firebase_auth/firebase_auth.dart';
+import '../Controller/visitor_vehicle.dart';
 
 class VisitorRegistrationView extends StatefulWidget {
   @override
@@ -108,6 +109,7 @@ class _VisitorRegistrationViewState extends State<VisitorRegistrationView> {
             ),
             ElevatedButton(
               onPressed: () async {
+                var userId = FirebaseAuth.instance.currentUser?.uid ?? 'unknown_user'; // Get current user's ID
                 try {
                   String result = await _controller.registerVehicle(
                     _plateNumberController.text,
@@ -116,6 +118,7 @@ class _VisitorRegistrationViewState extends State<VisitorRegistrationView> {
                     _visitorNameController.text,
                     _selectedAccessType,
                     _vehicleTypeController.text,
+                    userId, // Pass the user ID
                   );
                   _showDialog(context, result);
                 } catch (e) {

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../Model/vehicle_model.dart';
+import '../Model/visitor_vehicle.dart';
 
 class VehicleController {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;

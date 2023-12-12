@@ -8,6 +8,7 @@ class VisitorVehicle {
   String typeOfAccess;
   String vehicleType;
   String status;
+  String userId; // Field to store the user ID
 
   VisitorVehicle({
     required this.plateNumber,
@@ -17,6 +18,7 @@ class VisitorVehicle {
     required this.typeOfAccess,
     required this.vehicleType,
     this.status = 'Access Granted',
+    required this.userId,
   });
 
   bool get isAccessExpired => DateTime.now().isAfter(accessEndTime);
@@ -27,7 +29,6 @@ class VisitorVehicle {
     }
   }
 
-  // Static method to create a VisitorVehicle from Firestore data
   static VisitorVehicle fromFirestore(Map<String, dynamic> firestoreData) {
     return VisitorVehicle(
       plateNumber: firestoreData['plateNumber'] as String? ?? '',
@@ -37,8 +38,10 @@ class VisitorVehicle {
       typeOfAccess: firestoreData['typeOfAccess'] as String? ?? '',
       vehicleType: firestoreData['vehicleType'] as String? ?? '',
       status: firestoreData['status'] as String? ?? 'Access Granted',
+      userId: firestoreData['userId'] as String? ?? '',
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'plateNumber': plateNumber,
@@ -48,6 +51,7 @@ class VisitorVehicle {
       'typeOfAccess': typeOfAccess,
       'vehicleType': vehicleType,
       'status': status,
+      'userId': userId,
     };
   }
 }

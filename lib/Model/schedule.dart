@@ -1,26 +1,17 @@
-class Schedule {
-  String scheduleId;
-  String guardId;
-  DateTime date;
-  String shift; // e.g., 'morning', 'evening'
+class PatrolScheduleModel {
+  String? guardName;
+  String? day;
+  String? shift;
+  String? startTime;
 
-  Schedule({required this.scheduleId, required this.guardId, required this.date, required this.shift});
+  PatrolScheduleModel({this.guardName, this.day, this.shift, this.startTime});
 
-  factory Schedule.fromMap(Map<String, dynamic> data) {
-    return Schedule(
-      scheduleId: data['scheduleId'],
-      guardId: data['guardId'],
-      date: DateTime.parse(data['date']),
-      shift: data['shift'],
+  factory PatrolScheduleModel.fromMap(Map<String, dynamic> map) {
+    return PatrolScheduleModel(
+      guardName: map['guardName'],
+      day: map['day'],
+      shift: map['shift'],
+      startTime: map['startTime'],
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'scheduleId': scheduleId,
-      'guardId': guardId,
-      'date': date.toIso8601String(),
-      'shift': shift,
-    };
   }
 }

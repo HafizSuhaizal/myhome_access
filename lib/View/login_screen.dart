@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myhome_access/View/emergency_alert.dart';
 import 'package:myhome_access/View/notification.dart';
+import 'package:myhome_access/View/patrol_schedule.dart';
+import 'package:myhome_access/View/registered_vehicle.dart';
 import 'package:myhome_access/View/vehicle_view.dart';
+import 'package:myhome_access/View/visitor_vehicle.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -28,7 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text.trim(),
         );
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => EmergencyScreen(userEmail: '',),
+         // builder: (context) => EmergencyScreen(userEmail: '',),
+           // RegisteredVehiclesView
+          builder: (context) => PatrolScheduleScreen(),
         ));
       } on FirebaseAuthException catch (e) {
         setState(() {
