@@ -45,22 +45,58 @@ import 'package:cloud_firestore/cloud_firestore.dart';
   }*//*
 }*/
 
+// models/patrol_schedule_model.dart
+
+/*class PatrolScheduleModel {
+  final String email;
+  final List<Map<String, Map<String, String>>> schedule;
+
+  PatrolScheduleModel({
+    required this.email,
+    required this.schedule,
+  });
+
+  // Add a factory method to convert from a map
+  factory PatrolScheduleModel.fromMap(Map<String, dynamic> map) {
+    return PatrolScheduleModel(
+      email: map['email'],
+      schedule: List<Map<String, Map<String, String>>>.from(map['schedule']),
+    );
+  }
+}*/
+
 class PatrolScheduleModel {
-  late String day;
-  late Map<String, String> shifts;
+  final String email;
+  final List<Map<String, Map<String, String>>> schedule;
 
-  PatrolScheduleModel({required this.day, required this.shifts});
+  PatrolScheduleModel({
+    required this.email,
+    required this.schedule,
+  });
 
-  PatrolScheduleModel.fromJson(Map<String, dynamic> json) {
-    day = json['day'];
-    shifts = Map<String, String>.from(json['shifts']);
+  // Factory constructor to create a PatrolScheduleModel from JSON data
+  factory PatrolScheduleModel.fromJson(Map<String, dynamic> json) {
+    return PatrolScheduleModel(
+      email: json['email'],
+      schedule: List<Map<String, Map<String, String>>>.from(json['schedule'].map(
+            (entry) => Map<String, Map<String, String>>.from(entry),
+      )),
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['day'] = this.day;
-    data['shifts'] = this.shifts;
-    return data;
+  // Other methods or properties of your class, if any...
+
+  Map<String, dynamic> toMap() {
+    return {
+      'email': email,
+      'schedule': List<dynamic>.from(schedule.map(
+            (x) => Map<String, Map<String, String>>.from(x),
+      )),
+    };
   }
 }
+
+
+
+
 

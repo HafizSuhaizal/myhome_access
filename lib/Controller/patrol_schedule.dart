@@ -69,48 +69,167 @@ class PatrolController {
 }
 */
 
+// controllers/patrol_schedule_controller.dart
+
+// Import necessary packages and model
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../Model/patrol_schedule.dart';
+import '../Model/patrol_schedule.dart'; // Adjust this import path as necessary
 
 class PatrolScheduleController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> updatePatrolSchedule(String userEmail, List<PatrolScheduleModel> schedule) async {
-    await _firestore.collection("users").doc(userEmail).update({'patrolSchedule': _convertScheduleToJson(schedule)});
-  }
-
-  Future<List<PatrolScheduleModel>> getAllPatrolSchedules() async {
+  Future<void> generatePatrolSchedule() async {
     try {
-      // Fetch all users from Firestore
-      final QuerySnapshot<Map<String, dynamic>> usersSnapshot = await _firestore.collection("users").get();
+      final guardUsersSnapshot = await _firestore.collection('users').where('role', isEqualTo: 'Guard').get();
 
-      // Extract patrol schedules from each user
-      List<PatrolScheduleModel> allPatrolSchedules = [];
-      usersSnapshot.docs.forEach((userDoc) {
-        if (userDoc.exists) {
-          final data = userDoc.data();
-          if (data != null && data.containsKey('patrolSchedule')) {
-            // Convert Firestore data to PatrolScheduleModel
-            final List<dynamic> scheduleData = data['patrolSchedule'];
-            List<PatrolScheduleModel> userPatrolSchedules = scheduleData.map((entry) => PatrolScheduleModel.fromJson(entry)).toList();
+      final schedules = <PatrolScheduleModel>[];
 
-            // Add to the list of all patrol schedules
-            allPatrolSchedules.addAll(userPatrolSchedules);
+      List<Map<String, dynamic>> generateUserSchedule() {
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const shifts = ['Morning', 'Night'];
+
+        final userSchedule = <Map<String, dynamic>>[];
+
+        for (final day in daysOfWeek) {
+          final daySchedule = <String, dynamic>{};
+
+          for (final shift in shifts) {
+            daySchedule[shift] = {'guard': 'Assigned Guard'};
           }
-        }
-      });
 
-      return allPatrolSchedules;
+          userSchedule.add({'day': day, 'shifts': daySchedule});
+        }
+
+        return userSchedule;
+      }
+
+      Map<String, dynamic> getFairGuard(DocumentSnapshot doc) {
+        return {
+          'email': doc['email'],
+          'schedule': generateUserSchedule(),
+        };
+      }
+
+      for (final doc in guardUsersSnapshot.docs) {
+        final fairGuard = getFairGuard(doc);
+        schedules.add(PatrolScheduleModel.fromMap(fairGuard));
+      }
+
+      await _firestore.collection('patrolschedule').doc('schedules').set({'schedules': schedules});
+
+      print('Patrol schedules generated and updated in the "patrolschedule" collection.');
     } catch (error) {
-      // Handle error
-      print('Error fetching patrol schedules: $error');
+      print('Error generating patrol schedules: $error');
       throw error;
     }
   }
 
-  List<Map<String, dynamic>> _convertScheduleToJson(List<PatrolScheduleModel> schedule) {
-    return schedule.map((entry) => entry.toJson()).toList();
+  Future<List<PatrolScheduleModel>> getAllPatrolSchedules() async {
+    try {
+      final usersSnapshot = await _firestore.collection("users").get();
+
+      final allPatrolSchedules = <PatrolScheduleModel>[];
+      for (final userDoc in usersSnapshot.docs) {
+        if (userDoc.exists) {
+          final data = userDoc.data();
+          if (data != null && data.containsKey('patrolSchedule')) {
+            final List<dynamic> scheduleData = data['patrolSchedule'];
+            List<PatrolScheduleModel> userPatrolSchedules =
+            scheduleData.map((entry) => PatrolScheduleModel.fromJson(entry)).toList();
+            allPatrolSchedules.addAll(userPatrolSchedules);
+          }
+        }
+      }
+
+      return allPatrolSchedules;
+    } catch (error) {
+      print('Error fetching patrol schedules: $error');
+      throw error;
+    }
   }
 }
+*/
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Model/patrol_schedule.dart'; // Adjust this import path as necessary
+
+class PatrolScheduleController {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> generatePatrolSchedule() async {
+    try {
+      final guardUsersSnapshot = await _firestore.collection('users').where('role', isEqualTo: 'Guard').get();
+
+      final schedules = <PatrolScheduleModel>[];
+
+      List<Map<String, dynamic>> generateUserSchedule() {
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const shifts = ['Morning', 'Night'];
+
+        final userSchedule = <Map<String, dynamic>>[];
+
+        for (final day in daysOfWeek) {
+          final daySchedule = <String, dynamic>{};
+
+          for (final shift in shifts) {
+            daySchedule[shift] = {'guard': 'Assigned Guard'};
+          }
+
+          userSchedule.add({'day': day, 'shifts': daySchedule});
+        }
+
+        return userSchedule;
+      }
+
+      Map<String, dynamic> getFairGuard(DocumentSnapshot doc) {
+        return {
+          'email': doc['email'],
+          'schedule': generateUserSchedule(),
+        };
+      }
+
+      for (final doc in guardUsersSnapshot.docs) {
+        final fairGuard = getFairGuard(doc);
+        schedules.add(PatrolScheduleModel.fromJson(fairGuard));
+      }
+
+      await _firestore.collection('patrolschedule').doc('schedules').set({'schedules': schedules});
+
+      print('Patrol schedules generated and updated in the "patrolschedule" collection.');
+    } catch (error) {
+      print('Error generating patrol schedules: $error');
+      throw error;
+    }
+  }
+
+  Future<List<PatrolScheduleModel>> getAllPatrolSchedules() async {
+    try {
+      final usersSnapshot = await _firestore.collection("users").get();
+
+      final allPatrolSchedules = <PatrolScheduleModel>[];
+      for (final userDoc in usersSnapshot.docs) {
+        if (userDoc.exists) {
+          final data = userDoc.data();
+          if (data != null && data.containsKey('patrolSchedule')) {
+            final List<dynamic> scheduleData = data['patrolSchedule'];
+            List<PatrolScheduleModel> userPatrolSchedules =
+            scheduleData.map((entry) => PatrolScheduleModel.fromJson(entry)).toList();
+            allPatrolSchedules.addAll(userPatrolSchedules);
+          }
+        }
+      }
+
+      return allPatrolSchedules;
+    } catch (error) {
+      print('Error fetching patrol schedules: $error');
+      throw error;
+    }
+  }
+}
+
+
+
+
 
 

@@ -152,46 +152,45 @@ class PatrolView extends StatelessWidget {
 }*/
 
 
-import 'package:flutter/material.dart';
-
+/*import 'package:flutter/material.dart';
 import '../Controller/patrol_schedule.dart';
 import '../Model/patrol_schedule.dart';
 
-
 class PatrolScheduleView extends StatefulWidget {
-  const PatrolScheduleView({Key? key}) : super(key: key);
-
   @override
-  State<PatrolScheduleView> createState() => _PatrolScheduleViewState();
+  _PatrolScheduleViewState createState() => _PatrolScheduleViewState();
 }
 
 class _PatrolScheduleViewState extends State<PatrolScheduleView> {
-  final PatrolScheduleController _scheduleController = PatrolScheduleController();
+  final _controller = PatrolScheduleController();
 
   @override
   Widget build(BuildContext context) {
-    // Your UI for displaying and managing the patrol schedule goes here
     return Scaffold(
       appBar: AppBar(
-        title: Text('Patrol Schedule'),
+        title: Text('Patrol Schedules'),
       ),
-      body: FutureBuilder(
-        future: _scheduleController.getAllPatrolSchedules(),
-        builder: (context, AsyncSnapshot<List<PatrolScheduleModel>> snapshot) {
+      body: FutureBuilder<List<PatrolScheduleModel>>(
+        future: _controller.getAllPatrolSchedules(),
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading indicator
+            return CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            // Display your list of patrol schedules using snapshot.data
+            final schedules = snapshot.data;
+
+            if (schedules == null || schedules.isEmpty) {
+              return Text('No patrol schedules available.');
+            }
+
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: schedules.length,
               itemBuilder: (context, index) {
-                final schedule = snapshot.data![index];
-                // Build your UI for each patrol schedule item
+                final schedule = schedules[index];
                 return ListTile(
-                  title: Text(schedule.day),
-                  // Customize the display based on your PatrolScheduleModel structure
+                  title: Text(schedule.email),
+                  subtitle: Text('Schedule: ${schedule.schedule}'),
                 );
               },
             );
@@ -200,4 +199,87 @@ class _PatrolScheduleViewState extends State<PatrolScheduleView> {
       ),
     );
   }
+}*/
+
+
+import 'package:flutter/material.dart';
+import '../Controller/patrol_schedule.dart';
+import '../Model/patrol_schedule.dart'; // Import the controller
+
+class PatrolScheduleView extends StatefulWidget {
+  @override
+  _PatrolScheduleViewState createState() => _PatrolScheduleViewState();
 }
+
+class _PatrolScheduleViewState extends State<PatrolScheduleView> {
+  late Future<List<PatrolScheduleModel>> _patrolSchedulesFuture;
+  late PatrolScheduleController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PatrolScheduleController();
+
+    // Uncomment either of the following lines based on your use case:
+    // 1. To fetch existing patrol schedules
+    _patrolSchedulesFuture = _fetchPatrolSchedules();
+
+    // 2. To generate new patrol schedules
+    // _patrolSchedulesFuture = _generatePatrolSchedule();
+  }
+
+  Future<List<PatrolScheduleModel>> _fetchPatrolSchedules() async {
+    return _controller.getAllPatrolSchedules();
+  }
+
+  Future<List<PatrolScheduleModel>> _generatePatrolSchedule() async {
+    await _controller.generatePatrolSchedule();
+    return _controller.getAllPatrolSchedules();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Patrol Schedules'),
+      ),
+      body: FutureBuilder<List<PatrolScheduleModel>>(
+        future: _patrolSchedulesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Text('No patrol schedules available.');
+          } else {
+            return _buildListView(snapshot.data!);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildListView(List<PatrolScheduleModel> patrolSchedules) {
+    return ListView.builder(
+      itemCount: patrolSchedules.length,
+      itemBuilder: (context, index) {
+        final schedule = patrolSchedules[index];
+
+        return ListTile(
+          title: Text('Email: ${schedule.email}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Schedule:'),
+              for (final shift in schedule.schedule)
+                Text('   ${shift['day']}: ${shift['shifts']}'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+

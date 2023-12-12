@@ -31,10 +31,9 @@ class MyApp extends StatelessWidget {
 
       //home:EmergencyScreen(),
 
-      home:LoginScreen(),
+      //home:LoginScreen(),
       //home:SignUpScreen(),
-      //home: PatrolView(),
-
+      home: PatrolScheduleView(),
     );
   }
 }
