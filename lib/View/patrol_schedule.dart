@@ -29,7 +29,9 @@ class PatrolScheduleScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(schedule[index].guardName ?? ''),
-                subtitle: Text('${schedule[index].dayName}, ${schedule[index].day} - ${schedule[index].shift} - ${schedule[index].startTime}'),
+                subtitle: Text('${schedule[index].dayName}, ${schedule[index]
+                    .day} - ${schedule[index].shift} - ${schedule[index]
+                    .startTime}'),
               );
             },
           );

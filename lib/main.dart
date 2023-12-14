@@ -8,6 +8,7 @@ import 'package:myhome_access/View/visitor_vehicle.dart';
 import 'package:myhome_access/View/login_screen.dart';
 import 'package:myhome_access/signup_screen.dart';
 import 'package:myhome_access/vehicle.dart';
+import 'View/patrol_report.dart';
 import 'View/patrol_schedule.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'View/user.dart';
@@ -33,7 +34,11 @@ class MyApp extends StatelessWidget {
 
       //home:LoginScreen(),
       //home:SignUpScreen(),
+
       home: LoginScreen(),
+
+      //home: PatrolReportScreen(userEmail: '',),
+
     );
   }
 }
