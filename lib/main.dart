@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:myhome_access/View/history_logs.dart';
 import 'View/emergency_alert.dart';
 import 'View/fine_visitor_vehicle.dart';
 import 'package:myhome_access/View/emergency_alert.dart';
@@ -34,10 +35,11 @@ class MyApp extends StatelessWidget {
 
       //home:LoginScreen(),
       //home:SignUpScreen(),
-
-      home: LoginScreen(),
-
+      //home: PatrolScheduleScreen(),
+      //home: LoginScreen(),
+        home: PatrolReportView() ,
       //home: PatrolReportScreen(userEmail: '',),
+      //home: HistoryLogsView(),
 
     );
   }
