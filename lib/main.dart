@@ -35,13 +35,16 @@ class MyApp extends StatelessWidget {
 
       //home:LoginScreen(),
       //home:SignUpScreen(),
-      //home: PatrolScheduleScreen(),
-      //home: LoginScreen(),
-        home: PatrolReportView() ,
+
+        //home: PatrolReportView() ,
       //home: PatrolReportScreen(userEmail: '',),
       //home: HistoryLogsView(),
+
+
+      home: LoginScreen(),
+
+      //home: PatrolReportScreen(userEmail: '',),
 
     );
   }
 }
-
